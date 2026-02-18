@@ -30,13 +30,13 @@ body {
 .login-container,
 .todo-container {
   background: var(--card-bg);
-  backdrop-filter: blur(10px);
+  /* backdrop-filter: blur(10px);  <-- REMOVE: This breaks fixed positioning for drag */
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   border: var(--glass-border);
   text-align: center;
-  animation: fadeIn 0.5s ease-in-out;
+  /* animation: fadeIn 0.5s ease-in-out; <-- REMOVE: Transform also breaks position */
 }
 
 header {
@@ -55,6 +55,12 @@ h2 {
 p {
   color: #aaa;
   margin-bottom: 30px;
+}
+
+.user-email {
+  font-size: 0.8rem;
+  color: #666;
+  margin: -10px 0 20px 0;
 }
 
 .auth-button {
@@ -81,6 +87,8 @@ p {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  position: relative;
+  z-index: 10;
 }
 
 input {
@@ -91,6 +99,7 @@ input {
   border-radius: 15px;
   color: white;
   font-size: 16px;
+  cursor: text;
 }
 
 input:focus {
@@ -117,11 +126,13 @@ li {
   background: rgba(255, 255, 255, 0.05);
   margin-bottom: 10px;
   padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; <- REMOVED to prevent drag lag */
+  transition: background 0.2s ease, opacity 0.2s ease;
 }
 
 li.completed {
@@ -135,6 +146,28 @@ li.completed {
   gap: 15px;
   flex: 1;
   cursor: pointer;
+}
+
+.drag-handle {
+  cursor: grab;
+  padding: 5px 10px;
+  color: #666;
+  font-size: 1.2rem;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.is-dragging {
+  background: rgba(187, 134, 252, 0.2) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6) !important;
+  /* transform: scale(1.02); <- REMOVED to prevents positioning conflict */
+  z-index: 9999 !important;
+  /* Ensure it's on top */
+  transition: none !important;
+  /* CRITICAL: Disable transition during drag */
 }
 
 .checkbox {
